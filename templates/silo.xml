@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Container version="2">
+  <Name>Silo</Name>
+  <Repository>ghcr.io/silo-server/silo-server:latest</Repository>
+  <Registry>https://github.com/Silo-Server/silo-server/pkgs/container/silo-server</Registry>
+  <Network>bridge</Network>
+  <Shell>bash</Shell>
+  <Privileged>false</Privileged>
+
+  <Icon>https://raw.githubusercontent.com/Silo-Server/unraid-templates/main/icons/silo.png</Icon>
+  <WebUI>http://[IP]:[PORT:8080]</WebUI>
+
+  <Overview>Silo is a self-hosted media streaming server for your movies, shows, music and books. Point it at your media folders and stream to your devices - at home or away - with direct play, remuxing and hardware-accelerated transcoding handled automatically.
+
+A full-featured web client and admin interface ship with the server. An optional Jellyfin/Emby-compatible API lets you keep using clients you already own, such as Infuse, VidHub and Findroid. Household profiles give each member their own watch state and parental controls, and metadata is matched through installable plugins including TMDB and TVDB.
+
+IMPORTANT: Silo needs a PostgreSQL 18 database with the pgvector extension, and a Redis instance. Install the Silo-PostgreSQL and Silo-Redis templates from this same repository first, then set DATABASE_URL and REDIS_URL below to point at them.
+
+Hardware transcoding: leave the /dev/dri device mapping in place to use your Intel or AMD iGPU. Remove it if your server has no integrated GPU.</Overview>
+
+  <Support>https://forums.unraid.net/topic/PLACEHOLDER-CREATE-SUPPORT-THREAD</Support>
+  <Project>https://github.com/Silo-Server/silo-server</Project>
+  <TemplateURL>https://raw.githubusercontent.com/Silo-Server/unraid-templates/main/templates/silo.xml</TemplateURL>
+  <ReadMe>https://raw.githubusercontent.com/Silo-Server/silo-server/main/README.md</ReadMe>
+  <Discord>https://discord.gg/4RxuUQAEnW</Discord>
+  <DonateLink>https://github.com/sponsors/quick104</DonateLink>
+  <DonateText>Support Silo development</DonateText>
+
+  <Category>MediaServer:Video MediaServer:Music MediaServer:Books MediaApp:Video</Category>
+  <ExtraSearchTerms>silo media server streaming movies tv shows music audiobooks jellyfin emby plex transcode</ExtraSearchTerms>
+
+  <Requires>PostgreSQL 18 with the pgvector extension, and Redis. Both are available as separate templates in this repository (Silo-PostgreSQL and Silo-Redis) and must be running before Silo will start. A SECRET_KEY is also required - generate one with: openssl rand -base64 48</Requires>
+
+  <MinVer>6.12</MinVer>
+  <License>AGPL-3.0</License>
+  <Changes>
+### 7.3.2
+- Initial Community Applications release.
+  </Changes>
+
+  <!-- Web / API port -->
+  <Config Name="WebUI Port" Target="8080" Default="8090" Mode="tcp"
+          Description="Port for the Silo web interface and API."
+          Type="Port" Display="always" Required="true" Mask="false">8090</Config>
+
+  <!-- Jellyfin/Emby-compatible API port -->
+  <Config Name="Jellyfin-Compatible API Port" Target="8096" Default="8096" Mode="tcp"
+          Description="Port for the optional Jellyfin/Emby-compatible API, used by clients such as Infuse, VidHub and Findroid. Disabled until an administrator enables it in admin settings. Change this if you already run Jellyfin on 8096."
+          Type="Port" Display="always" Required="false" Mask="false">8096</Config>
+
+  <!-- Audiobookshelf-compatible API port -->
+  <Config Name="Audiobookshelf-Compatible API Port" Target="13378" Default="13378" Mode="tcp"
+          Description="Port for the optional Audiobookshelf-compatible API. Change this if you already run Audiobookshelf on 13378."
+          Type="Port" Display="advanced" Required="false" Mask="false">13378</Config>
+
+  <!-- Media -->
+  <Config Name="Media" Target="/mnt/media" Default="/mnt/user/media" Mode="ro"
+          Description="Your media library. Mounted read-only - Silo never writes to your media. Point this at the share holding your movies, shows and music."
+          Type="Path" Display="always" Required="true" Mask="false">/mnt/user/media</Config>
+
+  <Config Name="Books" Target="/mnt/media/books" Default="/mnt/user/media/books" Mode="ro"
+          Description="Books and audiobooks library, if you keep it outside your main media share. Mounted read-only."
+          Type="Path" Display="advanced" Required="false" Mask="false"></Config>
+
+  <!-- Persistent app data -->
+  <Config Name="Plugins" Target="/var/lib/silo/plugins" Default="/mnt/user/appdata/silo/plugins" Mode="rw"
+          Description="Installed metadata plugins. Persistent."
+          Type="Path" Display="advanced" Required="true" Mask="false">/mnt/user/appdata/silo/plugins</Config>
+
+  <Config Name="Compat Data" Target="/var/lib/silo/compat" Default="/mnt/user/appdata/silo/compat" Mode="rw"
+          Description="Assets for the Jellyfin/Emby-compatible API. Persistent."
+          Type="Path" Display="advanced" Required="true" Mask="false">/mnt/user/appdata/silo/compat</Config>
+
+  <Config Name="Audiobook Covers" Target="/var/lib/silo/audiobook-covers" Default="/mnt/user/appdata/silo/audiobook-covers" Mode="rw"
+          Description="Cached audiobook cover art. Persistent."
+          Type="Path" Display="advanced" Required="false" Mask="false">/mnt/user/appdata/silo/audiobook-covers</Config>
+
+  <Config Name="Catalog Seeds" Target="/catalog-seeds" Default="/mnt/user/appdata/silo/catalog-seeds" Mode="ro"
+          Description="Optional catalog seed data, read-only."
+          Type="Path" Display="advanced" Required="false" Mask="false">/mnt/user/appdata/silo/catalog-seeds</Config>
+
+  <!-- Transcode scratch: /tmp is RAM on Unraid, which avoids SSD wear -->
+  <Config Name="Transcode Scratch" Target="/tmp/silo-transcode" Default="/tmp/silo-transcode" Mode="rw"
+          Description="Temporary transcode files. Defaults to /tmp, which is RAM on Unraid - this avoids unnecessary SSD wear. Point it at a cache-backed path instead if you have limited RAM."
+          Type="Path" Display="advanced" Required="false" Mask="false">/tmp/silo-transcode</Config>
+
+  <!-- Host memory visibility, used by POSTGRES_TUNE -->
+  <Config Name="Host meminfo" Target="/host/proc/meminfo" Default="/proc/meminfo" Mode="ro"
+          Description="Read-only view of host memory, used to auto-tune database settings. Leave as-is."
+          Type="Path" Display="advanced" Required="false" Mask="false">/proc/meminfo</Config>
+
+  <!-- Required environment -->
+  <Config Name="MODE" Target="MODE" Default="integrated"
+          Description="Deployment mode. Leave as 'integrated' for a normal single-server install."
+          Type="Variable" Display="advanced" Required="true" Mask="false">integrated</Config>
+
+  <Config Name="SECRET_KEY" Target="SECRET_KEY" Default=""
+          Description="REQUIRED. Master key for at-rest credential encryption - the server will not start without it. Generate one by opening an Unraid terminal and running: openssl rand -base64 48 -- Back this up separately from your database. If you lose it, encrypted secrets cannot be recovered."
+          Type="Variable" Display="always" Required="true" Mask="true"></Config>
+
+  <Config Name="DATABASE_URL" Target="DATABASE_URL" Default="postgres://silo:silo@YOUR-UNRAID-IP:5432/silo?sslmode=disable"
+          Description="REQUIRED. Connection string for the Silo-PostgreSQL container. Replace YOUR-UNRAID-IP with your Unraid server's LAN IP address - containers on the default bridge network cannot resolve each other by name."
+          Type="Variable" Display="always" Required="true" Mask="false">postgres://silo:silo@YOUR-UNRAID-IP:5432/silo?sslmode=disable</Config>
+
+  <Config Name="REDIS_URL" Target="REDIS_URL" Default="redis://YOUR-UNRAID-IP:6379"
+          Description="REQUIRED. Connection string for the Silo-Redis container. Replace YOUR-UNRAID-IP with your Unraid server's LAN IP address."
+          Type="Variable" Display="always" Required="true" Mask="false">redis://YOUR-UNRAID-IP:6379</Config>
+
+  <Config Name="SILO_PLUGIN_CACHE_DIR" Target="SILO_PLUGIN_CACHE_DIR" Default="/var/lib/silo/plugins"
+          Description="Where plugins are cached inside the container. Leave as-is."
+          Type="Variable" Display="advanced" Required="false" Mask="false">/var/lib/silo/plugins</Config>
+
+  <Config Name="POSTGRES_TUNE" Target="POSTGRES_TUNE" Default="auto"
+          Description="Automatically tune database connection settings based on available host memory."
+          Type="Variable" Display="advanced" Required="false" Mask="false">auto</Config>
+
+  <!-- Hardware transcoding -->
+  <Config Name="Hardware Transcoding (iGPU)" Target="/dev/dri" Default="/dev/dri" Mode=""
+          Description="Intel or AMD integrated GPU for hardware-accelerated transcoding. Remove this entry if your server has no iGPU."
+          Type="Device" Display="always" Required="false" Mask="false">/dev/dri</Config>
+
+</Container>

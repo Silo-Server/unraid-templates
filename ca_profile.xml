@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CommunityApplications>
+  <Profile>
+Official Unraid templates for **Silo** — a self-hosted media streaming server for movies, shows, music and books.
+
+Point Silo at your media shares and stream to your devices at home or away, with direct play, remuxing and hardware-accelerated transcoding handled automatically. A full web client and admin interface ship with the server, and an optional Jellyfin/Emby-compatible API lets you keep using clients such as Infuse, VidHub and Findroid.
+
+This repository provides three templates:
+
+- **Silo** — the media server itself
+- **Silo-PostgreSQL** — PostgreSQL 18 with the `pgvector` extension, pre-configured for Silo
+- **Silo-Redis** — Redis, pre-configured for Silo
+
+Install **Silo-PostgreSQL** and **Silo-Redis** first, then **Silo**. Silo will not start until it can reach both.
+
+Support is via Discord or GitHub Issues.
+  </Profile>
+  <Icon>https://raw.githubusercontent.com/Silo-Server/unraid-templates/main/icon.png</Icon>
+  <WebPage>https://github.com/Silo-Server/silo-server</WebPage>
+  <Discord>https://discord.gg/4RxuUQAEnW</Discord>
+  <DonateLink>https://github.com/sponsors/quick104</DonateLink>
+  <DonateText>Support Silo development</DonateText>
+</CommunityApplications>

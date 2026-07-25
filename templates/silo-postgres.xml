@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Container version="2">
+  <Name>Silo-PostgreSQL</Name>
+  <Repository>pgvector/pgvector:pg18</Repository>
+  <Registry>https://hub.docker.com/r/pgvector/pgvector</Registry>
+  <Network>bridge</Network>
+  <Shell>bash</Shell>
+  <Privileged>false</Privileged>
+
+  <Icon>https://raw.githubusercontent.com/Silo-Server/unraid-templates/main/icons/silo-postgres.png</Icon>
+
+  <Overview>PostgreSQL 18 with the pgvector extension, pre-configured for the Silo media server.
+
+Silo requires PostgreSQL 18 or newer with both the pgvector and citext extensions available. A stock PostgreSQL container will NOT work - pgvector is not included by default. This template uses the official pgvector image, which bundles the extension and is built on the upstream PostgreSQL image (so citext is present too).
+
+Install and start this container BEFORE installing Silo.
+
+The defaults here (user 'silo', database 'silo') match the defaults in the Silo template. If you change the password below, remember to update DATABASE_URL in the Silo container to match.</Overview>
+
+  <Support>https://forums.unraid.net/topic/PLACEHOLDER-CREATE-SUPPORT-THREAD</Support>
+  <Project>https://github.com/Silo-Server/silo-server</Project>
+  <TemplateURL>https://raw.githubusercontent.com/Silo-Server/unraid-templates/main/templates/silo-postgres.xml</TemplateURL>
+  <Discord>https://discord.gg/4RxuUQAEnW</Discord>
+
+  <Category>Tools:Utilities MediaServer:Video</Category>
+  <ExtraSearchTerms>silo postgres postgresql pgvector database</ExtraSearchTerms>
+
+  <Requires>Install and start this container before installing Silo.</Requires>
+
+  <MinVer>6.12</MinVer>
+  <License>PostgreSQL License</License>
+
+  <Config Name="PostgreSQL Port" Target="5432" Default="5432" Mode="tcp"
+          Description="PostgreSQL port. Silo connects here via DATABASE_URL."
+          Type="Port" Display="always" Required="true" Mask="false">5432</Config>
+
+  <Config Name="Database Storage" Target="/var/lib/postgresql/data" Default="/mnt/user/appdata/silo-postgres" Mode="rw"
+          Description="Database files. Keep this on a cache pool or SSD - never on a spinning array disk."
+          Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/silo-postgres</Config>
+
+  <Config Name="POSTGRES_USER" Target="POSTGRES_USER" Default="silo"
+          Description="Database user. Must match the user in Silo's DATABASE_URL."
+          Type="Variable" Display="always" Required="true" Mask="false">silo</Config>
+
+  <Config Name="POSTGRES_PASSWORD" Target="POSTGRES_PASSWORD" Default="silo"
+          Description="Database password. Change this from the default, then update DATABASE_URL in the Silo container to match."
+          Type="Variable" Display="always" Required="true" Mask="true">silo</Config>
+
+  <Config Name="POSTGRES_DB" Target="POSTGRES_DB" Default="silo"
+          Description="Database name. Must match the database in Silo's DATABASE_URL."
+          Type="Variable" Display="always" Required="true" Mask="false">silo</Config>
+
+  <Config Name="PGDATA" Target="PGDATA" Default="/var/lib/postgresql/data/pgdata"
+          Description="Data subdirectory. Leave as-is - this keeps PostgreSQL happy when the parent path is a bind mount."
+          Type="Variable" Display="advanced" Required="false" Mask="false">/var/lib/postgresql/data/pgdata</Config>
+
+</Container>
