@@ -26,12 +26,17 @@ Redis service.
 Redis is required. Silo will not start until it can reach both PostgreSQL and Redis. A
 dedicated Redis instance is recommended, particularly if you run more than one Silo server.
 
+Choose a unique `POSTGRES_PASSWORD` when installing Silo-PostgreSQL; no password is supplied
+by the template. Use that same password in Silo's `DATABASE_URL`. If the password contains
+reserved URL characters, percent-encode them in the connection string. Connection URLs are
+masked in the Unraid form because they may contain credentials.
+
 ### Networking note
 
 Containers on Unraid's default `bridge` network **cannot resolve each other by name**.
-The `DATABASE_URL` and `REDIS_URL` defaults contain a literal `YOUR-UNRAID-IP` placeholder
-that must be replaced with the server's LAN IP address. Substituting the Compose-style
-hostnames (`postgres`, `redis`) will not work.
+The `DATABASE_URL` example and `REDIS_URL` default contain a literal `YOUR-UNRAID-IP`
+placeholder that must be replaced with the server's LAN IP address. Substituting the
+Compose-style hostnames (`postgres`, `redis`) will not work.
 
 Users who prefer name resolution can create a custom Docker network and attach all three
 containers to it.
@@ -49,8 +54,10 @@ Back it up separately from database dumps — losing it makes encrypted secrets 
 
 ### Hardware transcoding
 
-The Silo template maps `/dev/dri` for Intel and AMD integrated GPUs. Remove that entry on
-servers without an iGPU. Verified working on AMD Radeon 780M (`amdgpu`, `renderD128`).
+The optional device field is blank by default so CPU-only hosts install cleanly. If `/dev/dri`
+exists on the Unraid host, set the advanced **Hardware Transcoding (iGPU)** device field to
+`/dev/dri` to expose an Intel or AMD GPU to Silo. Verified working on AMD Radeon 780M
+(`amdgpu`, `renderD128`).
 
 ## Before submitting to Community Applications
 
@@ -88,4 +95,6 @@ cp templates/*.xml /boot/config/plugins/dockerMan/templates-user/
 
 ## License
 
-The templates in this repository are MIT licensed. Silo itself is AGPL-3.0.
+The template XML and repository documentation are MIT licensed. The Silo name, logo, icons,
+and other brand assets are © 2026 Silo Media L.L.C. and are not included in the MIT license;
+see `NOTICE.txt` and `TRADEMARK.md`. Silo server source code is AGPL-3.0-or-later.
