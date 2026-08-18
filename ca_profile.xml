@@ -17,6 +17,7 @@ Support is via Discord or GitHub Issues.
   </Profile>
   <Icon>https://raw.githubusercontent.com/Silo-Server/unraid-templates/main/icon.png</Icon>
   <WebPage>https://github.com/Silo-Server/silo-server</WebPage>
+  <Forum>https://github.com/Silo-Server/silo-server/issues</Forum>
   <Discord>https://discord.gg/4RxuUQAEnW</Discord>
   <DonateLink>https://github.com/sponsors/quick104</DonateLink>
   <DonateText>Support Silo development</DonateText>

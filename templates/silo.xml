@@ -18,7 +18,7 @@ IMPORTANT: Silo needs a PostgreSQL 18 database with the pgvector extension, and 
 
 Hardware transcoding: leave the /dev/dri device mapping in place to use your Intel or AMD iGPU. Remove it if your server has no integrated GPU.</Overview>
 
-  <Support>https://forums.unraid.net/topic/PLACEHOLDER-CREATE-SUPPORT-THREAD</Support>
+  <Support>https://github.com/Silo-Server/silo-server/issues</Support>
   <Project>https://github.com/Silo-Server/silo-server</Project>
   <TemplateURL>https://raw.githubusercontent.com/Silo-Server/unraid-templates/main/templates/silo.xml</TemplateURL>
   <ReadMe>https://raw.githubusercontent.com/Silo-Server/silo-server/main/README.md</ReadMe>

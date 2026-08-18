@@ -6,6 +6,7 @@
   <Network>bridge</Network>
   <Shell>bash</Shell>
   <Privileged>false</Privileged>
+  <ExtraParams>--shm-size=8g</ExtraParams>
 
   <Icon>https://raw.githubusercontent.com/Silo-Server/unraid-templates/main/icons/silo-postgres.png</Icon>
 
@@ -17,7 +18,7 @@ Install and start this container BEFORE installing Silo.
 
 The defaults here (user 'silo', database 'silo') match the defaults in the Silo template. If you change the password below, remember to update DATABASE_URL in the Silo container to match.</Overview>
 
-  <Support>https://forums.unraid.net/topic/PLACEHOLDER-CREATE-SUPPORT-THREAD</Support>
+  <Support>https://github.com/Silo-Server/silo-server/issues</Support>
   <Project>https://github.com/Silo-Server/silo-server</Project>
   <TemplateURL>https://raw.githubusercontent.com/Silo-Server/unraid-templates/main/templates/silo-postgres.xml</TemplateURL>
   <Discord>https://discord.gg/4RxuUQAEnW</Discord>
@@ -34,8 +35,8 @@ The defaults here (user 'silo', database 'silo') match the defaults in the Silo 
           Description="PostgreSQL port. Silo connects here via DATABASE_URL."
           Type="Port" Display="always" Required="true" Mask="false">5432</Config>
 
-  <Config Name="Database Storage" Target="/var/lib/postgresql/data" Default="/mnt/user/appdata/silo-postgres" Mode="rw"
-          Description="Database files. Keep this on a cache pool or SSD - never on a spinning array disk."
+  <Config Name="Database Storage" Target="/var/lib/postgresql" Default="/mnt/user/appdata/silo-postgres" Mode="rw"
+          Description="Database files. PostgreSQL 18 stores versioned data below this directory. Keep it on a cache pool or SSD - never on a spinning array disk."
           Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/silo-postgres</Config>
 
   <Config Name="POSTGRES_USER" Target="POSTGRES_USER" Default="silo"
@@ -49,9 +50,5 @@ The defaults here (user 'silo', database 'silo') match the defaults in the Silo 
   <Config Name="POSTGRES_DB" Target="POSTGRES_DB" Default="silo"
           Description="Database name. Must match the database in Silo's DATABASE_URL."
           Type="Variable" Display="always" Required="true" Mask="false">silo</Config>
-
-  <Config Name="PGDATA" Target="PGDATA" Default="/var/lib/postgresql/data/pgdata"
-          Description="Data subdirectory. Leave as-is - this keeps PostgreSQL happy when the parent path is a bind mount."
-          Type="Variable" Display="advanced" Required="false" Mask="false">/var/lib/postgresql/data/pgdata</Config>
 
 </Container>
