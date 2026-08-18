@@ -41,6 +41,12 @@ Compose-style hostnames (`postgres`, `redis`) will not work.
 Users who prefer name resolution can create a custom Docker network and attach all three
 containers to it.
 
+### Media path
+
+The template maps `/mnt/user/data` to the identical `/mnt/user/data` path inside Silo and
+mounts it read-only. Keep movies, shows, music, books and audiobooks beneath that root, then
+add the relevant subdirectories as libraries in Silo. There is no separate Books mapping.
+
 ### SECRET_KEY
 
 Silo refuses to start without `SECRET_KEY` (see `internal/config/bootstrap.go`). Generate one

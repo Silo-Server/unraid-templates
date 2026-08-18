@@ -54,13 +54,9 @@ Hardware transcoding is optional. If your Unraid server exposes /dev/dri, set th
           Type="Port" Display="advanced" Required="false" Mask="false">13378</Config>
 
   <!-- Media -->
-  <Config Name="Media" Target="/mnt/media" Default="/mnt/user/media" Mode="ro"
-          Description="Your media library. Mounted read-only - Silo never writes to your media. Point this at the share holding your movies, shows and music."
-          Type="Path" Display="always" Required="true" Mask="false">/mnt/user/media</Config>
-
-  <Config Name="Books" Target="/mnt/media/books" Default="/mnt/user/media/books" Mode="ro"
-          Description="Books and audiobooks library, if you keep it outside your main media share. Mounted read-only."
-          Type="Path" Display="advanced" Required="false" Mask="false"></Config>
+  <Config Name="Media Data" Target="/mnt/user/data" Default="/mnt/user/data" Mode="ro"
+          Description="Root share containing your media libraries, including movies, shows, music and books. The host and container paths are identical so paths remain consistent across your media stack. Mounted read-only - Silo never writes to your media."
+          Type="Path" Display="always" Required="true" Mask="false">/mnt/user/data</Config>
 
   <!-- Persistent app data -->
   <Config Name="Appdata" Target="/var/lib/silo" Default="/mnt/user/appdata/silo" Mode="rw"
