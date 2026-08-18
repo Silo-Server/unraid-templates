@@ -52,6 +52,13 @@ openssl rand -base64 48
 
 Back it up separately from database dumps — losing it makes encrypted secrets unrecoverable.
 
+### Persistent data
+
+The Silo container uses one appdata mapping: `/mnt/user/appdata/silo` on the host to
+`/var/lib/silo` in the container. It covers installed plugins, compatibility assets and
+other local Silo state. Back it up together with the separate Silo-PostgreSQL data directory
+and your `SECRET_KEY`.
+
 ### Hardware transcoding
 
 The optional device field is blank by default so CPU-only hosts install cleanly. If `/dev/dri`
