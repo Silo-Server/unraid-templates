@@ -14,7 +14,7 @@
 
 A full-featured web client and admin interface ship with the server. An optional Jellyfin/Emby-compatible API lets you keep using clients you already own, such as Infuse, VidHub and Findroid. Household profiles give each member their own watch state and parental controls, and metadata is matched through installable plugins including TMDB and TVDB.
 
-IMPORTANT: Silo needs a PostgreSQL 18 database with the pgvector extension, and a Redis instance. Install the Silo-PostgreSQL and Silo-Redis templates from this same repository first, then set DATABASE_URL and REDIS_URL below to point at them.
+IMPORTANT: Silo needs a PostgreSQL 18 database with the pgvector extension and Redis 6.2 or newer. Install the Silo-PostgreSQL template from this repository, then install any generic Redis container from Community Applications or use an existing Redis service. Set DATABASE_URL and REDIS_URL below to point at them.
 
 Hardware transcoding: leave the /dev/dri device mapping in place to use your Intel or AMD iGPU. Remove it if your server has no integrated GPU.</Overview>
 
@@ -29,7 +29,7 @@ Hardware transcoding: leave the /dev/dri device mapping in place to use your Int
   <Category>MediaServer:Video MediaServer:Music MediaServer:Books MediaApp:Video</Category>
   <ExtraSearchTerms>silo media server streaming movies tv shows music audiobooks jellyfin emby plex transcode</ExtraSearchTerms>
 
-  <Requires>PostgreSQL 18 with the pgvector extension, and Redis. Both are available as separate templates in this repository (Silo-PostgreSQL and Silo-Redis) and must be running before Silo will start. A SECRET_KEY is also required - generate one with: openssl rand -base64 48</Requires>
+  <Requires>PostgreSQL 18 with the pgvector extension and Redis 6.2 or newer must be running before Silo will start. Install Silo-PostgreSQL from this repository and any generic Redis container from Community Applications, or use an existing Redis service. A SECRET_KEY is also required - generate one with: openssl rand -base64 48</Requires>
 
   <MinVer>6.12</MinVer>
   <License>AGPL-3.0</License>
@@ -103,7 +103,7 @@ Hardware transcoding: leave the /dev/dri device mapping in place to use your Int
           Type="Variable" Display="always" Required="true" Mask="false">postgres://silo:silo@YOUR-UNRAID-IP:5432/silo?sslmode=disable</Config>
 
   <Config Name="REDIS_URL" Target="REDIS_URL" Default="redis://YOUR-UNRAID-IP:6379"
-          Description="REQUIRED. Connection string for the Silo-Redis container. Replace YOUR-UNRAID-IP with your Unraid server's LAN IP address."
+          Description="REQUIRED. Connection string for Redis 6.2 or newer. Install any generic Redis container from Community Applications or use an existing Redis service, then replace YOUR-UNRAID-IP with its reachable address."
           Type="Variable" Display="always" Required="true" Mask="false">redis://YOUR-UNRAID-IP:6379</Config>
 
   <Config Name="SILO_PLUGIN_CACHE_DIR" Target="SILO_PLUGIN_CACHE_DIR" Default="/var/lib/silo/plugins"

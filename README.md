@@ -10,19 +10,21 @@ for movies, shows, music and books.
 | --- | --- | --- |
 | `templates/silo.xml` | `ghcr.io/silo-server/silo-server` | The media server |
 | `templates/silo-postgres.xml` | `pgvector/pgvector:pg18` | PostgreSQL 18 + pgvector |
-| `templates/silo-redis.xml` | `redis:alpine` | Redis cache / job queue |
 
 Unraid's Community Applications installs one container per template — there is no Compose
-support — so Silo's dependencies ship as separate templates, the same way Immich,
-Paperless-ngx and Nextcloud do.
+support. Silo's PostgreSQL dependency ships as a companion template because it requires
+PostgreSQL 18 with the `pgvector` extension. Redis does not require a Silo-specific image;
+install any Redis 6.2-or-newer container from Community Applications, or use an existing
+Redis service.
 
 ## Install order
 
 1. **Silo-PostgreSQL** — start it, confirm it is healthy
-2. **Silo-Redis** — start it
+2. **Redis 6.2+** — install a generic Redis container or use an existing Redis service
 3. **Silo** — set `SECRET_KEY`, `DATABASE_URL` and `REDIS_URL`, then start
 
-Silo will not start until it can reach both PostgreSQL and Redis.
+Redis is required. Silo will not start until it can reach both PostgreSQL and Redis. A
+dedicated Redis instance is recommended, particularly if you run more than one Silo server.
 
 ### Networking note
 
@@ -61,8 +63,8 @@ These items must be complete before submission:
       templates *and* icons over `raw.githubusercontent.com`, so a private repo will fail
       Validate/Scan and show broken icons
 - [x] **Icons** — using the real Silo mark (`silo-server/assets/icon.png`, 256×256 RGBA).
-      Note that `silo-postgres.png` and `silo-redis.png` are currently *copies* of the Silo
-      icon so the suite reads as one family; swap in differentiated art if preferred.
+      Note that `silo-postgres.png` is currently a *copy* of the Silo icon so the suite reads
+      as one family; swap in differentiated art if preferred.
       `icons/silo-1024.png` is kept as a high-res source for any future resizing
 - [ ] **Confirm 2FA** is enabled on the maintainer's GitHub account and acknowledge it
       during submission, as required by CA policy
