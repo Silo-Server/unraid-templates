@@ -63,21 +63,9 @@ Hardware transcoding is optional. If your Unraid server exposes /dev/dri, set th
           Type="Path" Display="advanced" Required="false" Mask="false"></Config>
 
   <!-- Persistent app data -->
-  <Config Name="Plugins" Target="/var/lib/silo/plugins" Default="/mnt/user/appdata/silo/plugins" Mode="rw"
-          Description="Installed metadata plugins. Persistent."
-          Type="Path" Display="advanced" Required="true" Mask="false">/mnt/user/appdata/silo/plugins</Config>
-
-  <Config Name="Compat Data" Target="/var/lib/silo/compat" Default="/mnt/user/appdata/silo/compat" Mode="rw"
-          Description="Assets for the Jellyfin/Emby-compatible API. Persistent."
-          Type="Path" Display="advanced" Required="true" Mask="false">/mnt/user/appdata/silo/compat</Config>
-
-  <Config Name="Audiobook Covers" Target="/var/lib/silo/audiobook-covers" Default="/mnt/user/appdata/silo/audiobook-covers" Mode="rw"
-          Description="Cached audiobook cover art. Persistent."
-          Type="Path" Display="advanced" Required="false" Mask="false">/mnt/user/appdata/silo/audiobook-covers</Config>
-
-  <Config Name="Catalog Seeds" Target="/catalog-seeds" Default="/mnt/user/appdata/silo/catalog-seeds" Mode="ro"
-          Description="Optional catalog seed data, read-only."
-          Type="Path" Display="advanced" Required="false" Mask="false">/mnt/user/appdata/silo/catalog-seeds</Config>
+  <Config Name="Appdata" Target="/var/lib/silo" Default="/mnt/user/appdata/silo" Mode="rw"
+          Description="All persistent Silo application data, including installed plugins and compatibility assets. Back this directory up together with PostgreSQL and SECRET_KEY."
+          Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/silo</Config>
 
   <!-- Transcode scratch: /tmp is RAM on Unraid, which avoids SSD wear -->
   <Config Name="Transcode Scratch" Target="/tmp/silo-transcode" Default="/tmp/silo-transcode" Mode="rw"
