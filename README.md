@@ -52,10 +52,11 @@ servers without an iGPU. Verified working on AMD Radeon 780M (`amdgpu`, `renderD
 
 ## Before submitting to Community Applications
 
-These items are **not yet done** and block submission:
+These items must be complete before submission:
 
-- [ ] **Create the Unraid forum support thread** and replace the three
-      `PLACEHOLDER-CREATE-SUPPORT-THREAD` values in the `<Support>` tags
+- [x] **Support links** — all templates link to Silo's GitHub Issues page.
+      Community Applications accepts forums, issue trackers, or project-help pages
+      for `<Support>`; a dedicated Unraid forum thread is optional
 - [ ] **Make this repo public.** It is currently private. Community Applications fetches
       templates *and* icons over `raw.githubusercontent.com`, so a private repo will fail
       Validate/Scan and show broken icons
@@ -63,14 +64,8 @@ These items are **not yet done** and block submission:
       Note that `silo-postgres.png` and `silo-redis.png` are currently *copies* of the Silo
       icon so the suite reads as one family; swap in differentiated art if preferred.
       `icons/silo-1024.png` is kept as a high-res source for any future resizing
-- [ ] **Enable 2FA** on the GitHub org and the registry account — CA policy requires it,
-      and a violation blacklists the entire repository, not just one app
-- [ ] **Consider publishing `ghcr.io/silo-server/postgres:18`** instead of pointing at
-      `pgvector/pgvector:pg18`. Immich does this (`ghcr.io/immich-app/postgres`). It gives
-      you a pinned version you control and sidesteps CA's duplicate-repository rule
-- [ ] **Auto-generate `SECRET_KEY`** on first boot when absent. Right now a fresh install
-      dies immediately with a message telling the user to run `openssl` — a poor first-run
-      experience on a one-click platform
+- [ ] **Confirm 2FA** is enabled on the maintainer's GitHub account and acknowledge it
+      during submission, as required by CA policy
 - [ ] Run **Validate** then **Scan** at <https://ca.unraid.net/submit>
 
 ### Known gaps versus Unraid convention

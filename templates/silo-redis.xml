@@ -15,7 +15,7 @@ Silo uses Redis for caching and background job coordination. Install and start t
 
 If you already run a Redis or Valkey instance on your server, you can skip this template entirely and simply point Silo's REDIS_URL at your existing instance - just use a dedicated database index to avoid key collisions.</Overview>
 
-  <Support>https://forums.unraid.net/topic/PLACEHOLDER-CREATE-SUPPORT-THREAD</Support>
+  <Support>https://github.com/Silo-Server/silo-server/issues</Support>
   <Project>https://github.com/Silo-Server/silo-server</Project>
   <TemplateURL>https://raw.githubusercontent.com/Silo-Server/unraid-templates/main/templates/silo-redis.xml</TemplateURL>
   <Discord>https://discord.gg/4RxuUQAEnW</Discord>
