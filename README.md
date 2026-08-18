@@ -62,10 +62,11 @@ These items must be complete before submission:
 - [ ] **Make this repo public.** It is currently private. Community Applications fetches
       templates *and* icons over `raw.githubusercontent.com`, so a private repo will fail
       Validate/Scan and show broken icons
-- [x] **Icons** — using the real Silo mark (`silo-server/assets/icon.png`, 256×256 RGBA).
-      Note that `silo-postgres.png` is currently a *copy* of the Silo icon so the suite reads
-      as one family; swap in differentiated art if preferred.
-      `icons/silo-1024.png` is kept as a high-res source for any future resizing
+- [x] **Icons** — synchronized from the official `Silo-Server/silo-branding` repository
+      at `6278e96`.
+      CA listing icons use `logo/png/silo-project-icon-256.png`; `icons/silo-1024.png`
+      preserves the corresponding 1024 px render. `silo-postgres.png` intentionally uses
+      the same unmodified project icon so the official template suite reads as one family.
 - [ ] **Confirm 2FA** is enabled on the maintainer's GitHub account and acknowledge it
       during submission, as required by CA policy
 - [ ] Run **Validate** then **Scan** at <https://ca.unraid.net/submit>
