@@ -6,6 +6,7 @@
   <Network>bridge</Network>
   <Shell>bash</Shell>
   <Privileged>false</Privileged>
+  <ExtraParams></ExtraParams>
 
   <Icon>https://raw.githubusercontent.com/Silo-Server/unraid-templates/main/icons/silo.png</Icon>
   <WebUI>http://[IP]:[PORT:8080]</WebUI>
@@ -16,7 +17,7 @@ A full-featured web client and admin interface ship with the server. An optional
 
 IMPORTANT: Silo needs a PostgreSQL 18 database with the pgvector extension and Redis 6.2 or newer. Install the Silo-PostgreSQL template from this repository, then install any generic Redis container from Community Applications or use an existing Redis service. Set DATABASE_URL and REDIS_URL below to point at them.
 
-Hardware transcoding is optional. If your Unraid server exposes /dev/dri, set the advanced Hardware Transcoding device field to /dev/dri to use an Intel or AMD GPU.</Overview>
+Hardware transcoding is optional. For Intel or AMD, set the advanced Intel / AMD GPU Device field to /dev/dri when that device exists. For NVIDIA, install the Unraid Nvidia-Driver plugin, add --runtime=nvidia in Advanced View's Extra Parameters, and enter your GPU UUID in the NVIDIA GPU UUID field. Silo's automatic hardware detection will select NVENC.</Overview>
 
   <Support>https://github.com/Silo-Server/silo-server/issues</Support>
   <Project>https://github.com/Silo-Server/silo-server</Project>
@@ -99,8 +100,16 @@ Hardware transcoding is optional. If your Unraid server exposes /dev/dri, set th
           Type="Variable" Display="advanced" Required="false" Mask="false">auto</Config>
 
   <!-- Hardware transcoding -->
-  <Config Name="Hardware Transcoding (iGPU)" Target="/dev/dri" Default="" Mode=""
+  <Config Name="Intel / AMD GPU Device" Target="/dev/dri" Default="" Mode=""
           Description="Optional Intel or AMD GPU for hardware-accelerated transcoding. Set this to /dev/dri only when that device exists on the Unraid host; leave it blank for CPU-only systems."
           Type="Device" Display="advanced" Required="false" Mask="false"></Config>
+
+  <Config Name="NVIDIA GPU UUID" Target="NVIDIA_VISIBLE_DEVICES" Default="" Mode=""
+          Description="Optional NVIDIA hardware transcoding. Install the Unraid Nvidia-Driver plugin, copy a GPU UUID from its settings into this field (or use 'all'), and add --runtime=nvidia in Advanced View's Extra Parameters. Leave blank when NVIDIA is not used."
+          Type="Variable" Display="advanced" Required="false" Mask="false"></Config>
+
+  <Config Name="NVIDIA Driver Capabilities" Target="NVIDIA_DRIVER_CAPABILITIES" Default="compute,video,utility" Mode=""
+          Description="NVIDIA runtime capabilities required for CUDA, NVENC/NVDEC and GPU diagnostics. Leave as-is when using NVIDIA; harmless when the NVIDIA GPU UUID is blank."
+          Type="Variable" Display="advanced" Required="false" Mask="false">compute,video,utility</Config>
 
 </Container>

@@ -67,10 +67,24 @@ and your `SECRET_KEY`.
 
 ### Hardware transcoding
 
-The optional device field is blank by default so CPU-only hosts install cleanly. If `/dev/dri`
-exists on the Unraid host, set the advanced **Hardware Transcoding (iGPU)** device field to
-`/dev/dri` to expose an Intel or AMD GPU to Silo. Verified working on AMD Radeon 780M
+Hardware acceleration is optional; CPU-only hosts install without either GPU field configured.
+
+For Intel or AMD, if `/dev/dri` exists on the Unraid host, set the advanced
+**Intel / AMD GPU Device** field to `/dev/dri`. Verified working on AMD Radeon 780M
 (`amdgpu`, `renderD128`).
+
+For NVIDIA NVENC/NVDEC:
+
+1. Install the **Nvidia-Driver** plugin from Community Applications and reboot if prompted.
+2. Open the plugin settings and copy the desired GPU UUID.
+3. Edit the Silo container with **Advanced View** enabled and add `--runtime=nvidia` to
+   **Extra Parameters**.
+4. Enter the UUID in **NVIDIA GPU UUID** (or use `all`). Leave
+   `NVIDIA_DRIVER_CAPABILITIES` set to `compute,video,utility`.
+
+Silo's default `auto` hardware-acceleration mode detects the exposed NVIDIA device and selects
+NVENC. The template does not force the NVIDIA runtime because doing so would prevent Silo from
+starting on hosts without the plugin/runtime installed.
 
 ## Before submitting to Community Applications
 
