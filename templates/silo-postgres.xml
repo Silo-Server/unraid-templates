@@ -16,7 +16,7 @@ Silo requires PostgreSQL 18 or newer with both the pgvector and citext extension
 
 Install and start this container BEFORE installing Silo.
 
-The defaults here (user 'silo', database 'silo') match the defaults in the Silo template. If you change the password below, remember to update DATABASE_URL in the Silo container to match.</Overview>
+The default user and database name ('silo') match the example in the Silo template. You must choose a unique password, then use the same password in DATABASE_URL. Percent-encode any reserved URL characters when adding the password to DATABASE_URL.</Overview>
 
   <Support>https://github.com/Silo-Server/silo-server/issues</Support>
   <Project>https://github.com/Silo-Server/silo-server</Project>
@@ -43,9 +43,9 @@ The defaults here (user 'silo', database 'silo') match the defaults in the Silo 
           Description="Database user. Must match the user in Silo's DATABASE_URL."
           Type="Variable" Display="always" Required="true" Mask="false">silo</Config>
 
-  <Config Name="POSTGRES_PASSWORD" Target="POSTGRES_PASSWORD" Default="silo"
-          Description="Database password. Change this from the default, then update DATABASE_URL in the Silo container to match."
-          Type="Variable" Display="always" Required="true" Mask="true">silo</Config>
+  <Config Name="POSTGRES_PASSWORD" Target="POSTGRES_PASSWORD" Default=""
+          Description="REQUIRED. Choose a unique database password; no default is provided. Use the same password in Silo's DATABASE_URL and percent-encode reserved URL characters there."
+          Type="Variable" Display="always" Required="true" Mask="true"></Config>
 
   <Config Name="POSTGRES_DB" Target="POSTGRES_DB" Default="silo"
           Description="Database name. Must match the database in Silo's DATABASE_URL."
