@@ -22,7 +22,7 @@ Hardware transcoding is optional. For Intel or AMD, add --device=/dev/dri:/dev/d
   <Support>https://github.com/Silo-Server/silo-server/issues</Support>
   <Project>https://github.com/Silo-Server/silo-server</Project>
   <TemplateURL>https://raw.githubusercontent.com/Silo-Server/unraid-templates/main/templates/silo.xml</TemplateURL>
-  <ReadMe>https://raw.githubusercontent.com/Silo-Server/silo-server/main/README.md</ReadMe>
+  <ReadMe>https://raw.githubusercontent.com/Silo-Server/unraid-templates/main/README.md</ReadMe>
   <Discord>https://discord.gg/4RxuUQAEnW</Discord>
   <DonateLink>https://github.com/sponsors/quick104</DonateLink>
   <DonateText>Support Silo development</DonateText>
@@ -33,7 +33,7 @@ Hardware transcoding is optional. For Intel or AMD, add --device=/dev/dri:/dev/d
   <Requires>PostgreSQL 18 with the pgvector extension and Redis 6.2 or newer must be running before Silo will start. Install Silo-PostgreSQL from this repository and any generic Redis container from Community Applications, or use an existing Redis service. When using Unraid autostart, order both dependencies before Silo and give PostgreSQL time to become ready. A SECRET_KEY is also required - generate one with: openssl rand -base64 48</Requires>
 
   <MinVer>6.12</MinVer>
-  <License>AGPL-3.0</License>
+  <License>AGPL-3.0-or-later</License>
   <Changes>
 ### 7.3.2
 - Initial Community Applications release.

@@ -21,6 +21,7 @@ The default user and database name ('silo') match the example in the Silo templa
   <Support>https://github.com/Silo-Server/silo-server/issues</Support>
   <Project>https://github.com/Silo-Server/silo-server</Project>
   <TemplateURL>https://raw.githubusercontent.com/Silo-Server/unraid-templates/main/templates/silo-postgres.xml</TemplateURL>
+  <ReadMe>https://raw.githubusercontent.com/Silo-Server/unraid-templates/main/README.md</ReadMe>
   <Discord>https://discord.gg/4RxuUQAEnW</Discord>
 
   <Category>Tools:Utilities MediaServer:Video</Category>
