@@ -92,34 +92,9 @@ Silo's default `auto` hardware-acceleration mode detects the exposed NVIDIA devi
 NVENC. The template does not force the NVIDIA runtime because doing so would prevent Silo from
 starting on hosts without the plugin/runtime installed.
 
-## Before submitting to Community Applications
+## Manual template installation
 
-These items must be complete before submission:
-
-- [x] **Support links** — all templates link to Silo's GitHub Issues page.
-      Community Applications accepts forums, issue trackers, or project-help pages
-      for `<Support>`; a dedicated Unraid forum thread is optional
-- [x] **Public repository** — Community Applications and anonymous users can fetch the
-      profile, templates, icons and README from `main`
-- [x] **Icons** — synchronized from the official `Silo-Server/silo-branding` repository
-      at `6278e96`.
-      CA listing icons use `logo/png/silo-project-icon-256.png`; `icons/silo-1024.png`
-      preserves the corresponding 1024 px render. `silo-postgres.png` intentionally uses
-      the same unmodified project icon so the official template suite reads as one family.
-- [ ] **Confirm 2FA** is enabled on the publisher's GitHub and container-registry accounts,
-      then acknowledge it during submission as required by CA policy
-- [ ] Sign in at <https://ca.unraid.net/submit>, then run **Validate** and **Scan**
-
-### Known gaps versus Unraid convention
-
-- **No `PUID`/`PGID` support.** The Silo image has no `USER` directive and no
-  `gosu`/`su-exec` step, so it runs as root. This is accepted on CA but is not the norm —
-  most media containers let users run as `99:100` (`nobody:users`). Worth addressing upstream.
-
-## Testing locally before submission
-
-Templates can be trialled without submitting anything. Copy the XML onto the Unraid flash
-drive and it appears in the Docker tab as though installed from CA:
+Copy the XML onto the Unraid flash drive to make the templates available from the Docker tab:
 
 ```sh
 cp templates/*.xml /boot/config/plugins/dockerMan/templates-user/
