@@ -26,6 +26,10 @@ Redis service.
 Redis is required. Silo will not start until it can reach both PostgreSQL and Redis. A
 dedicated Redis instance is recommended, particularly if you run more than one Silo server.
 
+If you enable Unraid autostart, keep Redis and Silo-PostgreSQL ahead of Silo in Docker
+startup order and configure a short wait after PostgreSQL. Silo exits when either dependency
+is still unavailable; start it again once both services are ready.
+
 Choose a unique `POSTGRES_PASSWORD` when installing Silo-PostgreSQL; no password is supplied
 by the template. Use that same password in Silo's `DATABASE_URL`. If the password contains
 reserved URL characters, percent-encode them in the connection string. Connection URLs are
@@ -67,11 +71,13 @@ and your `SECRET_KEY`.
 
 ### Hardware transcoding
 
-Hardware acceleration is optional; CPU-only hosts install without either GPU field configured.
+Hardware acceleration is optional; CPU-only hosts install without any GPU settings.
 
-For Intel or AMD, if `/dev/dri` exists on the Unraid host, set the advanced
-**Intel / AMD GPU Device** field to `/dev/dri`. Verified working on AMD Radeon 780M
-(`amdgpu`, `renderD128`).
+For Intel or AMD, if `/dev/dri` exists on the Unraid host, enable **Advanced View** and add
+`--device=/dev/dri:/dev/dri` to **Extra Parameters**. Do not add an empty Device entry:
+DockerMan renders that as the invalid argument `--device=''`. Device exposure has been
+smoke-tested on an AMD Hawk Point iGPU; a configured media library is still required to
+exercise an actual transcode.
 
 For NVIDIA NVENC/NVDEC:
 

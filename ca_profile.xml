@@ -10,7 +10,7 @@ This repository provides two templates:
 - **Silo** — the media server itself
 - **Silo-PostgreSQL** — PostgreSQL 18 with the `pgvector` extension, pre-configured for Silo
 
-Redis 6.2 or newer is also required, but no Silo-specific Redis image is necessary. Install any generic Redis container from Community Applications or point Silo at an existing Redis service. Start **Silo-PostgreSQL** and Redis before installing **Silo**; Silo will not start until it can reach both.
+Redis 6.2 or newer is also required, but no Silo-specific Redis image is necessary. Install any generic Redis container from Community Applications or point Silo at an existing Redis service. Start **Silo-PostgreSQL** and Redis before installing **Silo**; Silo will not start until it can reach both. For Unraid autostart, order both dependencies before Silo and give PostgreSQL time to become ready.
 
 Support is via Discord or GitHub Issues.
   </Profile>
