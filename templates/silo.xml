@@ -11,7 +11,7 @@
   <Icon>https://raw.githubusercontent.com/Silo-Server/unraid-templates/main/icons/silo.png</Icon>
   <WebUI>http://[IP]:[PORT:8080]</WebUI>
 
-  <Overview>Silo is a self-hosted media streaming server for your movies, shows, music and books. Point it at your media folders and stream to your devices - at home or away - with direct play, remuxing and hardware-accelerated transcoding handled automatically.
+  <Overview>Silo is a self-hosted media server for your films and series. Point it at your media folders and stream to your devices - at home or away - with direct play, remuxing and hardware-accelerated transcoding handled automatically.
 
 A full-featured web client and admin interface ship with the server. An optional Jellyfin/Emby-compatible API lets you keep using clients you already own, such as Infuse, VidHub and Findroid. Household profiles give each member their own watch state and parental controls, and metadata is matched through installable plugins including TMDB and TVDB.
 
@@ -27,8 +27,8 @@ Hardware transcoding is optional. For Intel or AMD, add --device=/dev/dri:/dev/d
   <DonateLink>https://github.com/sponsors/quick104</DonateLink>
   <DonateText>Support Silo development</DonateText>
 
-  <Category>MediaServer:Video MediaServer:Music MediaServer:Books MediaApp:Video</Category>
-  <ExtraSearchTerms>silo media server streaming movies tv shows music audiobooks jellyfin emby plex transcode</ExtraSearchTerms>
+  <Category>MediaServer:Video MediaApp:Video</Category>
+  <ExtraSearchTerms>silo media server streaming films movies tv series shows jellyfin emby plex transcode</ExtraSearchTerms>
 
   <Requires>PostgreSQL 18 with the pgvector extension and Redis 6.2 or newer must be running before Silo will start. Install Silo-PostgreSQL from this repository and any generic Redis container from Community Applications, or use an existing Redis service. When using Unraid autostart, order both dependencies before Silo and give PostgreSQL time to become ready. A SECRET_KEY is also required - generate one with: openssl rand -base64 48</Requires>
 
@@ -57,7 +57,7 @@ Hardware transcoding is optional. For Intel or AMD, add --device=/dev/dri:/dev/d
 
   <!-- Media -->
   <Config Name="Media Data" Target="/mnt/user/data" Default="/mnt/user/data" Mode="ro"
-          Description="Root share containing your media libraries, including movies, shows, music and books. The host and container paths are identical so paths remain consistent across your media stack. Mounted read-only - Silo never writes to your media."
+          Description="Root share containing your film and series libraries. The host and container paths are identical so paths remain consistent across your media stack. Mounted read-only - Silo never writes to your media."
           Type="Path" Display="always" Required="true" Mask="false">/mnt/user/data</Config>
 
   <!-- Persistent app data -->

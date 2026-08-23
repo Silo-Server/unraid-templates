@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CommunityApplications>
   <Profile>
-Official Unraid templates for **Silo** — a self-hosted media streaming server for movies, shows, music and books.
+Official Unraid templates for **Silo** — a self-hosted media server for films and series.
 
 Point Silo at your media shares and stream to your devices at home or away, with direct play, remuxing and hardware-accelerated transcoding handled automatically. A full web client and admin interface ship with the server, and an optional Jellyfin/Emby-compatible API lets you keep using clients such as Infuse, VidHub and Findroid.
 
