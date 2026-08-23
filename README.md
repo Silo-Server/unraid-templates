@@ -99,17 +99,16 @@ These items must be complete before submission:
 - [x] **Support links** — all templates link to Silo's GitHub Issues page.
       Community Applications accepts forums, issue trackers, or project-help pages
       for `<Support>`; a dedicated Unraid forum thread is optional
-- [ ] **Make this repo public.** It is currently private. Community Applications fetches
-      templates *and* icons over `raw.githubusercontent.com`, so a private repo will fail
-      Validate/Scan and show broken icons
+- [x] **Public repository** — Community Applications and anonymous users can fetch the
+      profile, templates, icons and README from `main`
 - [x] **Icons** — synchronized from the official `Silo-Server/silo-branding` repository
       at `6278e96`.
       CA listing icons use `logo/png/silo-project-icon-256.png`; `icons/silo-1024.png`
       preserves the corresponding 1024 px render. `silo-postgres.png` intentionally uses
       the same unmodified project icon so the official template suite reads as one family.
-- [ ] **Confirm 2FA** is enabled on the maintainer's GitHub account and acknowledge it
-      during submission, as required by CA policy
-- [ ] Run **Validate** then **Scan** at <https://ca.unraid.net/submit>
+- [ ] **Confirm 2FA** is enabled on the publisher's GitHub and container-registry accounts,
+      then acknowledge it during submission as required by CA policy
+- [ ] Sign in at <https://ca.unraid.net/submit>, then run **Validate** and **Scan**
 
 ### Known gaps versus Unraid convention
 
