@@ -32,8 +32,10 @@ is still unavailable; start it again once both services are ready.
 
 Choose a unique `POSTGRES_PASSWORD` when installing Silo-PostgreSQL; no password is supplied
 by the template. Use that same password in Silo's `DATABASE_URL`. If the password contains
-reserved URL characters, percent-encode them in the connection string. Connection URLs are
-masked in the Unraid form because they may contain credentials.
+reserved URL characters, percent-encode them in the connection string. `DATABASE_URL` and
+`REDIS_URL` show as visible placeholders/examples in the Unraid form, not masked fields —
+replace them with your own values before starting the container. Because `DATABASE_URL` is
+unmasked, the database password appears in plaintext in the Unraid template/configuration.
 
 ### Networking note
 

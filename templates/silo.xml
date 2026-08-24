@@ -84,13 +84,13 @@ Hardware transcoding is optional. For Intel or AMD, add --device=/dev/dri:/dev/d
           Description="REQUIRED. Master key for at-rest credential encryption - the server will not start without it. Generate one by opening an Unraid terminal and running: openssl rand -base64 48 -- Back this up separately from your database. If you lose it, encrypted secrets cannot be recovered."
           Type="Variable" Display="always" Required="true" Mask="true"></Config>
 
-  <Config Name="DATABASE_URL" Target="DATABASE_URL" Default=""
+  <Config Name="DATABASE_URL" Target="DATABASE_URL" Default="postgres://silo:YOUR-PASSWORD@YOUR-UNRAID-IP:5432/silo?sslmode=disable"
           Description="REQUIRED. Connection string for Silo-PostgreSQL, for example: postgres://silo:YOUR-PASSWORD@YOUR-UNRAID-IP:5432/silo?sslmode=disable. The password must match POSTGRES_PASSWORD. Replace YOUR-UNRAID-IP with your Unraid server's LAN IP address and percent-encode reserved characters in the password."
-          Type="Variable" Display="always" Required="true" Mask="true"></Config>
+          Type="Variable" Display="always" Required="true" Mask="false">postgres://silo:YOUR-PASSWORD@YOUR-UNRAID-IP:5432/silo?sslmode=disable</Config>
 
   <Config Name="REDIS_URL" Target="REDIS_URL" Default="redis://YOUR-UNRAID-IP:6379"
           Description="REQUIRED. Connection string for Redis 6.2 or newer. Install any generic Redis container from Community Applications or use an existing Redis service, then replace YOUR-UNRAID-IP with its reachable address."
-          Type="Variable" Display="always" Required="true" Mask="true">redis://YOUR-UNRAID-IP:6379</Config>
+          Type="Variable" Display="always" Required="true" Mask="false">redis://YOUR-UNRAID-IP:6379</Config>
 
   <Config Name="SILO_PLUGIN_CACHE_DIR" Target="SILO_PLUGIN_CACHE_DIR" Default="/var/lib/silo/plugins"
           Description="Where plugins are cached inside the container. Leave as-is."
