@@ -22,7 +22,7 @@ The default user and database name ('silo') match the example in the Silo templa
   <Project>https://github.com/Silo-Server/silo-server</Project>
   <TemplateURL>https://raw.githubusercontent.com/Silo-Server/unraid-templates/main/templates/silo-postgres.xml</TemplateURL>
   <ReadMe>https://raw.githubusercontent.com/Silo-Server/unraid-templates/main/README.md</ReadMe>
-  <Discord>http://discord.gg/siloserver</Discord>
+  <Discord>https://discord.gg/siloserver</Discord>
 
   <Category>Tools:Utilities MediaServer:Video</Category>
   <ExtraSearchTerms>silo postgres postgresql pgvector database</ExtraSearchTerms>
