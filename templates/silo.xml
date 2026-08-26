@@ -23,7 +23,7 @@ Hardware transcoding is optional. For Intel or AMD, add --device=/dev/dri:/dev/d
   <Project>https://github.com/Silo-Server/silo-server</Project>
   <TemplateURL>https://raw.githubusercontent.com/Silo-Server/unraid-templates/main/templates/silo.xml</TemplateURL>
   <ReadMe>https://raw.githubusercontent.com/Silo-Server/unraid-templates/main/README.md</ReadMe>
-  <Discord>https://discord.gg/4RxuUQAEnW</Discord>
+  <Discord>https://discord.gg/siloserver</Discord>
   <DonateLink>https://github.com/sponsors/quick104</DonateLink>
   <DonateText>Support Silo development</DonateText>
 
