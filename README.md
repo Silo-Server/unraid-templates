@@ -1,8 +1,8 @@
 # Silo — Unraid Community Applications templates
 
 Official [Unraid](https://unraid.net) Community Applications templates for
-[Silo](https://github.com/Silo-Server/silo-server), a self-hosted media server for films
-and series.
+[Silo](https://github.com/Silo-Server/silo-server), a self-hosted media server for
+films, series, audiobooks, ebooks, podcasts, and manga.
 
 ## Templates
 
@@ -50,7 +50,7 @@ containers to it.
 ### Media path
 
 The template maps `/mnt/user/data` to the identical `/mnt/user/data` path inside Silo and
-mounts it read-only. Keep films and series beneath that root, then add the relevant
+mounts it read-only. Keep media beneath that root, then add the relevant
 subdirectories as libraries in Silo.
 
 ### SECRET_KEY
@@ -101,6 +101,12 @@ Copy the XML onto the Unraid flash drive to make the templates available from th
 ```sh
 cp templates/*.xml /boot/config/plugins/dockerMan/templates-user/
 ```
+
+## Contributing
+
+Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request. Changes to
+topology, required services, networking defaults, storage, or upgrade behavior
+should start as an issue.
 
 ## License
 
