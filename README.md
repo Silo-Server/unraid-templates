@@ -2,7 +2,7 @@
 
 Official [Unraid](https://unraid.net) Community Applications templates for
 [Silo](https://github.com/Silo-Server/silo-server), a self-hosted media server for
-films, series, audiobooks, ebooks, podcasts, and manga.
+films and series.
 
 ## Templates
 
