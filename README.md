@@ -50,7 +50,7 @@ containers to it.
 ### Media path
 
 The template maps `/mnt/user/data` to the identical `/mnt/user/data` path inside Silo and
-mounts it read-only. Keep media beneath that root, then add the relevant
+mounts it read-only. Keep films and series beneath that root, then add the relevant
 subdirectories as libraries in Silo.
 
 ### SECRET_KEY
