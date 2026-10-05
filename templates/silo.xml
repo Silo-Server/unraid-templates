@@ -6,7 +6,7 @@
   <Network>bridge</Network>
   <Shell>bash</Shell>
   <Privileged>false</Privileged>
-  <ExtraParams></ExtraParams>
+  <ExtraParams>--restart=on-failure</ExtraParams>
 
   <Icon>https://raw.githubusercontent.com/Silo-Server/unraid-templates/main/icons/silo.png</Icon>
   <WebUI>http://[IP]:[PORT:8080]</WebUI>
@@ -15,9 +15,9 @@
 
 A full-featured web client and admin interface ship with the server. An optional Jellyfin/Emby-compatible API lets you keep using clients you already own, such as Infuse, VidHub and Findroid. Household profiles give each member their own watch state and parental controls, and metadata is matched through installable plugins including TMDB and TVDB.
 
-IMPORTANT: Silo needs a PostgreSQL 18 database with the pgvector extension and Redis 6.2 or newer. Install the Silo-PostgreSQL template from this repository, then install any generic Redis container from Community Applications or use an existing Redis service. Set DATABASE_URL and REDIS_URL below to point at them. If you enable Unraid autostart, place Redis and Silo-PostgreSQL before Silo in Docker startup order and give PostgreSQL time to become ready; Silo stops when either dependency is unavailable.
+IMPORTANT: Silo needs a PostgreSQL 18 database with the pgvector extension and Redis 6.2 or newer. Install the Silo-PostgreSQL template from this repository, then install any generic Redis container from Community Applications or use an existing Redis service. Set DATABASE_URL and REDIS_URL below to point at them. If you enable Unraid autostart, place Redis and Silo-PostgreSQL before Silo in Docker startup order. If Silo starts before either dependency is reachable, it exits and Docker restarts it with a growing delay until both are up. This relies on --restart=on-failure in Advanced View's Extra Parameters, so keep it there.
 
-Hardware transcoding is optional. For Intel or AMD, add --device=/dev/dri:/dev/dri in Advanced View's Extra Parameters only when /dev/dri exists on the host. For NVIDIA, install the Unraid Nvidia-Driver plugin, add --runtime=nvidia in Advanced View's Extra Parameters, and enter your GPU UUID in the NVIDIA GPU UUID field. Silo's automatic hardware detection will select NVENC.</Overview>
+Hardware transcoding is optional. For Intel or AMD, add --device=/dev/dri:/dev/dri to Advanced View's Extra Parameters, after --restart=on-failure, only when /dev/dri exists on the host. For NVIDIA, install the Unraid Nvidia-Driver plugin, add --runtime=nvidia to Advanced View's Extra Parameters after --restart=on-failure, and enter your GPU UUID in the NVIDIA GPU UUID field. Silo's automatic hardware detection will select NVENC.</Overview>
 
   <Support>https://github.com/Silo-Server/silo-server/issues</Support>
   <Project>https://github.com/Silo-Server/silo-server</Project>
@@ -30,11 +30,14 @@ Hardware transcoding is optional. For Intel or AMD, add --device=/dev/dri:/dev/d
   <Category>MediaServer:Video MediaApp:Video</Category>
   <ExtraSearchTerms>silo media server streaming films movies tv series shows jellyfin emby plex transcode</ExtraSearchTerms>
 
-  <Requires>PostgreSQL 18 with the pgvector extension and Redis 6.2 or newer must be running before Silo will start. Install Silo-PostgreSQL from this repository and any generic Redis container from Community Applications, or use an existing Redis service. When using Unraid autostart, order both dependencies before Silo and give PostgreSQL time to become ready. A SECRET_KEY is also required - generate one with: openssl rand -base64 48</Requires>
+  <Requires>PostgreSQL 18 with the pgvector extension and Redis 6.2 or newer must be running before Silo will start. Install Silo-PostgreSQL from this repository and any generic Redis container from Community Applications, or use an existing Redis service. When using Unraid autostart, order both dependencies before Silo. Silo restarts automatically if it starts before they are ready. A SECRET_KEY is also required - generate one with: openssl rand -base64 48</Requires>
 
   <MinVer>6.12</MinVer>
   <License>AGPL-3.0-or-later</License>
   <Changes>
+### 2026.10.05
+- Restart Silo automatically when it starts before PostgreSQL or Redis is ready.
+
 ### 7.3.2
 - Initial Community Applications release.
 - Avoid passing an empty GPU device on systems without /dev/dri.
@@ -102,7 +105,7 @@ Hardware transcoding is optional. For Intel or AMD, add --device=/dev/dri:/dev/d
 
   <!-- Hardware transcoding -->
   <Config Name="NVIDIA GPU UUID" Target="NVIDIA_VISIBLE_DEVICES" Default="" Mode=""
-          Description="Optional NVIDIA hardware transcoding. Install the Unraid Nvidia-Driver plugin, copy a GPU UUID from its settings into this field (or use 'all'), and add --runtime=nvidia in Advanced View's Extra Parameters. Leave blank when NVIDIA is not used."
+          Description="Optional NVIDIA hardware transcoding. Install the Unraid Nvidia-Driver plugin, copy a GPU UUID from its settings into this field (or use 'all'), and add --runtime=nvidia to Advanced View's Extra Parameters after --restart=on-failure. Leave blank when NVIDIA is not used."
           Type="Variable" Display="advanced" Required="false" Mask="false"></Config>
 
   <Config Name="NVIDIA Driver Capabilities" Target="NVIDIA_DRIVER_CAPABILITIES" Default="compute,video,utility" Mode=""
