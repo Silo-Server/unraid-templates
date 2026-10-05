@@ -27,8 +27,10 @@ Redis is required. Silo will not start until it can reach both PostgreSQL and Re
 dedicated Redis instance is recommended, particularly if you run more than one Silo server.
 
 If you enable Unraid autostart, keep Redis and Silo-PostgreSQL ahead of Silo in Docker
-startup order and configure a short wait after PostgreSQL. Silo exits when either dependency
-is still unavailable; start it again once both services are ready.
+startup order. Silo exits when it cannot reach either dependency at startup. The template
+sets `--restart=on-failure` in **Extra Parameters**, so Docker starts Silo again with a
+growing delay until both services are ready. Keep that flag when you add other Extra
+Parameters. Stopping Silo yourself, or stopping the array, does not trigger a restart.
 
 Choose a unique `POSTGRES_PASSWORD` when installing Silo-PostgreSQL; no password is supplied
 by the template. Use that same password in Silo's `DATABASE_URL`. If the password contains
@@ -76,17 +78,17 @@ and your `SECRET_KEY`.
 Hardware acceleration is optional; CPU-only hosts install without any GPU settings.
 
 For Intel or AMD, if `/dev/dri` exists on the Unraid host, enable **Advanced View** and add
-`--device=/dev/dri:/dev/dri` to **Extra Parameters**. Do not add an empty Device entry:
-DockerMan renders that as the invalid argument `--device=''`. Device exposure has been
-smoke-tested on an AMD Hawk Point iGPU; a configured media library is still required to
-exercise an actual transcode.
+`--device=/dev/dri:/dev/dri` to **Extra Parameters**, after `--restart=on-failure`. Do not
+add an empty Device entry: DockerMan renders that as the invalid argument `--device=''`.
+Device exposure has been smoke-tested on an AMD Hawk Point iGPU; a configured media library
+is still required to exercise an actual transcode.
 
 For NVIDIA NVENC/NVDEC:
 
 1. Install the **Nvidia-Driver** plugin from Community Applications and reboot if prompted.
 2. Open the plugin settings and copy the desired GPU UUID.
 3. Edit the Silo container with **Advanced View** enabled and add `--runtime=nvidia` to
-   **Extra Parameters**.
+   **Extra Parameters**, after `--restart=on-failure`.
 4. Enter the UUID in **NVIDIA GPU UUID** (or use `all`). Leave
    `NVIDIA_DRIVER_CAPABILITIES` set to `compute,video,utility`.
 
