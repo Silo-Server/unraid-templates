@@ -8,93 +8,168 @@ films and series.
 
 | Template | Image | Purpose |
 | --- | --- | --- |
-| `templates/silo.xml` | `ghcr.io/silo-server/silo-server` | The media server |
-| `templates/silo-postgres.xml` | `pgvector/pgvector:pg18` | PostgreSQL 18 + pgvector |
+| `templates/silo.xml` | `ghcr.io/silo-server/silo-server:aio` | Silo with bundled PostgreSQL and Redis, and optional Meilisearch |
+| `templates/silo-postgres.xml` | `pgvector/pgvector:pg18` | Optional external PostgreSQL for installations that manage the database separately |
 
-Unraid's Community Applications installs one container per template — there is no Compose
-support. Silo's PostgreSQL dependency ships as a companion template because it requires
-PostgreSQL 18 with the `pgvector` extension. Redis does not require a Silo-specific image;
-install any Redis 6.2-or-newer container from Community Applications, or use an existing
-Redis service.
+The Silo AIO image runs the server and its bundled services in one container.
+Separate PostgreSQL and Redis containers are no longer required. PostgreSQL
+handles search by default; bundled Meilisearch is off.
 
-## Install order
+## New installation
 
-1. **Silo-PostgreSQL** — start it, confirm it is healthy
-2. **Redis 6.2+** — install a generic Redis container or use an existing Redis service
-3. **Silo** — set `SECRET_KEY`, `DATABASE_URL` and `REDIS_URL`, then start
+1. Install **Silo** from Community Applications.
+2. Generate a `SECRET_KEY` in an Unraid terminal with `openssl rand -base64 48`
+   and enter it in the template.
+3. Choose your media and appdata paths. Use an empty appdata directory for a
+   fresh installation; the default is `/mnt/user/appdata/silo-aio`.
+4. Start the container and open its WebUI to create the administrator account
+   and configure libraries.
 
-Redis is required. Silo will not start until it can reach both PostgreSQL and Redis. A
-dedicated Redis instance is recommended, particularly if you run more than one Silo server.
+The WebUI uses host port `8090`. Optional Jellyfin-compatible and
+Audiobookshelf-compatible listeners use `8096` and `13378`; publishing those
+ports does not enable the features in Silo. Change a host port if another
+container already uses it.
 
-If you enable Unraid autostart, keep Redis and Silo-PostgreSQL ahead of Silo in Docker
-startup order. Silo exits when it cannot reach either dependency at startup. The template
-sets `--restart=on-failure` in **Extra Parameters**, so Docker starts Silo again with a
-growing delay until both services are ready. Keep that flag when you add other Extra
-Parameters. Stopping Silo yourself, or stopping the array, does not trigger a restart.
+The template sets `--restart=on-failure --stop-timeout=120 --memory=4g` in
+**Extra Parameters**. These restart a failed container, allow two minutes for
+Silo and PostgreSQL to shut down, and limit container memory to 4 GiB. Adjust
+the memory limit for your workload. Preserve the restart and shutdown options
+when adding GPU parameters. Unraid autostart is a separate setting; enable it
+if Silo should start with the array. No companion-container startup order is
+needed for the default AIO installation.
 
-Choose a unique `POSTGRES_PASSWORD` when installing Silo-PostgreSQL; no password is supplied
-by the template. Use that same password in Silo's `DATABASE_URL`. If the password contains
-reserved URL characters, percent-encode them in the connection string. `DATABASE_URL` and
-`REDIS_URL` show as visible placeholders/examples in the Unraid form, not masked fields —
-replace them with your own values before starting the container. Because `DATABASE_URL` is
-unmasked, the database password appears in plaintext in the Unraid template/configuration.
+### Bundled and external services
 
-### Networking note
+These settings are available in **Advanced View**:
 
-Containers on Unraid's default `bridge` network **cannot resolve each other by name**.
-The `DATABASE_URL` example and `REDIS_URL` default contain a literal `YOUR-UNRAID-IP`
-placeholder that must be replaced with the server's LAN IP address. Substituting the
-Compose-style hostnames (`postgres`, `redis`) will not work.
+| Setting | Default | Behavior |
+| --- | --- | --- |
+| `DATABASE_URL` | Empty | Uses bundled PostgreSQL. Set an external PostgreSQL 18 connection URL with pgvector to disable the bundled database. |
+| `ENABLE_REDIS` | `true` | Starts bundled Redis. Set `false` to run without Redis when no enabled feature needs it. |
+| `REDIS_URL` | Empty | Set an external Redis 6.2-or-newer URL to disable bundled Redis. Overrides `ENABLE_REDIS`. |
+| `ENABLE_MEILISEARCH` | `false` | Set `true` to start bundled Meilisearch and configure it as the search provider. |
 
-Users who prefer name resolution can create a custom Docker network and attach all three
-containers to it.
+`POSTGRES_TUNE` is blank by default: the image auto-tunes bundled PostgreSQL
+within its memory budget and leaves external PostgreSQL untuned. Set `auto`
+only if Silo should change the external server's settings with `ALTER SYSTEM`;
+set `off` to disable tuning for either database.
 
-### Media path
+Silo needs a PostgreSQL database, so there is no database-off mode without an
+external `DATABASE_URL`. The template masks both connection URLs because they
+can contain passwords; their saved values still need to be protected with the
+Unraid configuration.
 
-The template maps `/mnt/user/data` to the identical `/mnt/user/data` path inside Silo and
-mounts it read-only. Keep films and series beneath that root, then add the relevant
-subdirectories as libraries in Silo.
+Meilisearch requires Redis for paged searches. Enabling bundled Meilisearch,
+or setting `SILO_SEARCH_PROVIDER=meilisearch` for an external provider, starts
+bundled Redis even when `ENABLE_REDIS=false`, unless `REDIS_URL` points elsewhere.
+To run without Redis, leave `REDIS_URL` empty, set `ENABLE_REDIS=false`, leave Meilisearch off,
+and use PostgreSQL search. Watch Party requires Redis.
 
-### SECRET_KEY
+Setting `ENABLE_MEILISEARCH=false` stops the bundled service. If the image
+configured that search provider, it switches search back to PostgreSQL. It
+does not clear a separately configured external Meilisearch provider; change
+that provider in Silo's search settings if you no longer want to use it.
 
-Silo refuses to start without `SECRET_KEY` (see `internal/config/bootstrap.go`). Generate one
-from an Unraid terminal:
+Bundled PostgreSQL and Redis are private to the container by default. No host
+ports for either are published. When using external services on Unraid's
+standard `bridge` network, use a reachable host address in the connection URL;
+containers on that network cannot resolve each other by name. A user-defined
+Docker network can provide container-name resolution.
 
-```sh
-openssl rand -base64 48
-```
+### Media and permissions
 
-Back it up separately from database dumps — losing it makes encrypted secrets unrecoverable.
+The template maps `/mnt/user/data` to the same path inside Silo, read-only.
+Choose your media share and add its film and series folders as libraries.
+Silo does not modify the media files.
 
-### Persistent data
+`PUID=99` and `PGID=100` use Unraid's `nobody` user and `users` group for Silo.
+Change them if another user or group owns your media, and make sure that
+identity can read the files and traverse their parent directories. PostgreSQL,
+Redis, and Meilisearch keep their own service accounts inside the container.
 
-The Silo container uses one appdata mapping: `/mnt/user/appdata/silo` on the host to
-`/var/lib/silo` in the container. It covers installed plugins, compatibility assets and
-other local Silo state. Back it up together with the separate Silo-PostgreSQL data directory
-and your `SECRET_KEY`.
+### SECRET_KEY and persistent data
 
-### Hardware transcoding
+`SECRET_KEY` encrypts stored credentials. Back it up separately from the data;
+losing it makes encrypted secrets unrecoverable. Keep the same key when
+restoring an installation.
 
-Hardware acceleration is optional; CPU-only hosts install without any GPU settings.
+The **Appdata** mapping mounts `/mnt/user/appdata/silo-aio` at `/config`.
+It contains Silo state, plugins, artwork, and the bundled services' data.
+Stop the container before making a file backup of this directory so the
+bundled PostgreSQL database is shut down cleanly. External databases need
+separate backups.
 
-For Intel or AMD, if `/dev/dri` exists on the Unraid host, enable **Advanced View** and add
-`--device=/dev/dri:/dev/dri` to **Extra Parameters**, after `--restart=on-failure`. Do not
-add an empty Device entry: DockerMan renders that as the invalid argument `--device=''`.
-Device exposure has been smoke-tested on an AMD Hawk Point iGPU; a configured media library
-is still required to exercise an actual transcode.
+**Transcode Scratch** defaults to `/mnt/user/appdata/silo-transcode` on the
+host, mapped to `/tmp/silo-transcode`. Choose fast local storage with enough
+space for active streams. A host path of `/tmp/silo-transcode` uses Unraid's
+RAM-backed temporary storage instead; only use it if enough memory is
+available. This scratch data does not need backing up.
+
+The **Download Artifacts** mapping (Advanced View) holds transcoded copies that Silo
+prepares for offline downloads when an administrator enables transcoded downloads. It
+defaults to `/mnt/user/appdata/silo-download-artifacts`. The files can be large and Silo
+recreates them on demand, so the folder can be left out of backups. Without the mapping
+they would be written inside `docker.img`. If you change `playback.transcode_dir`
+to a different parent directory, update the artifact mount to cover the new
+`silo-download-artifacts` directory beside it, or set `download.artifact_dir`
+to `/tmp/silo-download-artifacts` to keep using this mount.
+
+## Existing installations
+
+This template's defaults describe a fresh AIO installation. Changing the image
+from `:latest` to `:aio` does **not** migrate an existing separate PostgreSQL
+database or move the old `/var/lib/silo` appdata into `/config`. Unraid also
+retains saved container settings, so an existing container can still have its
+old image, mappings, and connection URLs after the published template changes.
+
+Back up the database, application data, saved template, and `SECRET_KEY` before
+planning a migration. Keep the old service containers and data until the
+migration has been completed and verified. Clearing `DATABASE_URL` starts a
+bundled database; it does not import the external one. The separate
+`Silo-PostgreSQL` template remains available for installations that need it.
+
+The test behind these defaults covered a **fresh install**, not migration:
+Unraid 7.4.0-rc.1, Silo build 1811, bundled PostgreSQL and Redis, setup and
+library persistence across a restart, a synthetic H.264/AAC sample, 720p direct
+play, and 480p hardware VA-API transcoding with pause, seek, and resume.
+The updated template was also imported into Unraid and tested with Redis off,
+then Meilisearch on while `ENABLE_REDIS=false`, then Meilisearch off again.
+Readiness passed in each state. The service connection checks passed with
+Meilisearch enabled, which automatically started bundled Redis; disabling
+Meilisearch returned search to PostgreSQL and stopped the now-unneeded Redis.
+The test instance was restored to Redis on and Meilisearch off.
+
+External PostgreSQL, external Redis, and both together also passed on the same
+Unraid host and Silo build. Separate test containers used a user-defined Docker
+network and the template's service settings, `99:100` ownership, and 4 GiB limit.
+Readiness passed in all three cases, each external URL disabled its bundled
+service, and Silo authenticated and subscribed to external Redis. With
+`POSTGRES_TUNE` blank, bundled PostgreSQL used automatic tuning and the external
+database's `postgresql.auto.conf` remained unchanged. Temporary test resources
+were removed. NVIDIA transcoding was not exercised.
+
+## Hardware transcoding
+
+Hardware acceleration is optional. CPU-only hosts need no GPU parameters.
+
+For Intel or AMD, if `/dev/dri` exists on the host, add
+`--device=/dev/dri:/dev/dri` to **Extra Parameters**, keeping the existing
+restart, shutdown, and memory options. Do not add an empty Device entry:
+DockerMan renders it as the invalid argument `--device=''`. Silo detects the
+passed-through device; hardware VA-API transcoding was verified in the fresh
+AIO test described above.
 
 For NVIDIA NVENC/NVDEC:
 
 1. Install the **Nvidia-Driver** plugin from Community Applications and reboot if prompted.
 2. Open the plugin settings and copy the desired GPU UUID.
-3. Edit the Silo container with **Advanced View** enabled and add `--runtime=nvidia` to
-   **Extra Parameters**, after `--restart=on-failure`.
+3. Add `--runtime=nvidia` to **Extra Parameters**, keeping the existing options.
 4. Enter the UUID in **NVIDIA GPU UUID** (or use `all`). Leave
    `NVIDIA_DRIVER_CAPABILITIES` set to `compute,video,utility`.
 
-Silo's default `auto` hardware-acceleration mode detects the exposed NVIDIA device and selects
-NVENC. The template does not force the NVIDIA runtime because doing so would prevent Silo from
-starting on hosts without the plugin/runtime installed.
+Silo's `auto` hardware-acceleration mode detects an exposed NVIDIA device and
+selects NVENC. The template does not force a GPU device or runtime, so it can
+also start on hosts without one.
 
 ## Manual template installation
 
