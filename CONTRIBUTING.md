@@ -25,9 +25,10 @@ xmllint --noout ca_profile.xml templates/*.xml
 ```
 
 For template behavior changes, install the templates on an Unraid host and
-verify a fresh setup with PostgreSQL, Redis, and Silo. Confirm paths,
-placeholders, ports, permissions, dependency startup order, and any hardware
-device settings. Include the tested Unraid version and actual results in the
+verify a fresh AIO setup with Silo and its enabled bundled services. Confirm paths,
+ports, permissions, service readiness, restart persistence, and any hardware
+device settings. Exercise changed service controls and external-service overrides
+when applicable. Include the tested Unraid version and actual results in the
 pull request.
 
 Do not commit credentials, generated Unraid user templates, appdata, database
