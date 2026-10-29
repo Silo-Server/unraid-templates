@@ -139,12 +139,14 @@ Meilisearch enabled, which automatically started bundled Redis; disabling
 Meilisearch returned search to PostgreSQL and stopped the now-unneeded Redis.
 The test instance was restored to Redis on and Meilisearch off.
 
-A separate Linux Docker check used AIO revision `9ef61925c6b7` with external
-PostgreSQL, external Redis, and both together. Readiness passed in all three
-cases, and only the services without an external URL ran inside AIO. With
+External PostgreSQL, external Redis, and both together also passed on the same
+Unraid host and Silo build. Separate test containers used a user-defined Docker
+network and the template's service settings, `99:100` ownership, and 4 GiB limit.
+Readiness passed in all three cases, each external URL disabled its bundled
+service, and Silo authenticated and subscribed to external Redis. With
 `POSTGRES_TUNE` blank, bundled PostgreSQL used automatic tuning and the external
-database's `postgresql.auto.conf` remained unchanged. External-service overrides
-were not tested on Unraid itself; NVIDIA transcoding was not exercised.
+database's `postgresql.auto.conf` remained unchanged. Temporary test resources
+were removed. NVIDIA transcoding was not exercised.
 
 ## Hardware transcoding
 
