@@ -49,6 +49,11 @@ These settings are available in **Advanced View**:
 | `REDIS_URL` | Empty | Set an external Redis 6.2-or-newer URL to disable bundled Redis. Overrides `ENABLE_REDIS`. |
 | `ENABLE_MEILISEARCH` | `false` | Set `true` to start bundled Meilisearch and configure it as the search provider. |
 
+`POSTGRES_TUNE` is blank by default: the image auto-tunes bundled PostgreSQL
+within its memory budget and leaves external PostgreSQL untuned. Set `auto`
+only if Silo should change the external server's settings with `ALTER SYSTEM`;
+set `off` to disable tuning for either database.
+
 Silo needs a PostgreSQL database, so there is no database-off mode without an
 external `DATABASE_URL`. The template masks both connection URLs because they
 can contain passwords; their saved values still need to be protected with the
@@ -104,7 +109,10 @@ The **Download Artifacts** mapping (Advanced View) holds transcoded copies that 
 prepares for offline downloads when an administrator enables transcoded downloads. It
 defaults to `/mnt/user/appdata/silo-download-artifacts`. The files can be large and Silo
 recreates them on demand, so the folder can be left out of backups. Without the mapping
-they would be written inside `docker.img`.
+they would be written inside `docker.img`. If you change `playback.transcode_dir`
+to a different parent directory, update the artifact mount to cover the new
+`silo-download-artifacts` directory beside it, or set `download.artifact_dir`
+to `/tmp/silo-download-artifacts` to keep using this mount.
 
 ## Existing installations
 
@@ -129,8 +137,14 @@ then Meilisearch on while `ENABLE_REDIS=false`, then Meilisearch off again.
 Readiness passed in each state. The service connection checks passed with
 Meilisearch enabled, which automatically started bundled Redis; disabling
 Meilisearch returned search to PostgreSQL and stopped the now-unneeded Redis.
-The test instance was restored to Redis on and Meilisearch off. External
-services and NVIDIA transcoding were not exercised.
+The test instance was restored to Redis on and Meilisearch off.
+
+A separate Linux Docker check used AIO revision `9ef61925c6b7` with external
+PostgreSQL, external Redis, and both together. Readiness passed in all three
+cases, and only the services without an external URL ran inside AIO. With
+`POSTGRES_TUNE` blank, bundled PostgreSQL used automatic tuning and the external
+database's `postgresql.auto.conf` remained unchanged. External-service overrides
+were not tested on Unraid itself; NVIDIA transcoding was not exercised.
 
 ## Hardware transcoding
 

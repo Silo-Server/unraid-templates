@@ -84,7 +84,7 @@ Hardware transcoding is optional. For Intel or AMD, add --device=/dev/dri:/dev/d
 
   <!-- Prepared offline downloads: without this mapping they fill docker.img -->
   <Config Name="Download Artifacts" Target="/tmp/silo-download-artifacts" Default="/mnt/user/appdata/silo-download-artifacts" Mode="rw"
-          Description="Transcoded copies that Silo prepares for offline downloads. Only used when an administrator enables transcoded downloads; files can be large and are regenerated on demand, so you can leave this folder out of backups. Keep it mapped - otherwise the files are written inside docker.img."
+          Description="Transcoded copies that Silo prepares for offline downloads. Only used when an administrator enables transcoded downloads; files can be large and are regenerated on demand, so you can leave this folder out of backups. Keep it mapped - otherwise the files are written inside docker.img. If playback.transcode_dir moves to another parent directory, update this mount or set download.artifact_dir to this mounted directory."
           Type="Path" Display="advanced" Required="false" Mask="false">/mnt/user/appdata/silo-download-artifacts</Config>
 
   <!-- Host memory visibility, used by POSTGRES_TUNE -->
@@ -130,9 +130,9 @@ Hardware transcoding is optional. For Intel or AMD, add --device=/dev/dri:/dev/d
           Description="Where plugins are cached inside the container. Leave as-is."
           Type="Variable" Display="advanced" Required="false" Mask="false">/var/lib/silo/plugins</Config>
 
-  <Config Name="POSTGRES_TUNE" Target="POSTGRES_TUNE" Default="auto"
-          Description="Automatically tune database settings. The bundled database uses a 50 percent memory budget by default. Set off when an external database must not be tuned by Silo."
-          Type="Variable" Display="advanced" Required="false" Mask="false">auto</Config>
+  <Config Name="POSTGRES_TUNE" Target="POSTGRES_TUNE" Default=""
+          Description="Leave blank for automatic tuning of bundled PostgreSQL only, with a 50 percent memory budget. External PostgreSQL is not tuned by default. Set auto only to explicitly allow tuning of an external server, or off to disable all tuning."
+          Type="Variable" Display="advanced" Required="false" Mask="false"></Config>
 
   <!-- Hardware transcoding -->
   <Config Name="NVIDIA GPU UUID" Target="NVIDIA_VISIBLE_DEVICES" Default="" Mode=""
