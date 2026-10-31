@@ -131,7 +131,8 @@ that account. Media that only root can read becomes unreadable.
 Before updating an existing container, open its settings and add two
 variables: `PUID` set to `99` and `PGID` set to `100`, or a user and group that
 can read your media. To stay on the earlier image instead, set the repository
-to `build-1874` or an earlier `build-N` tag.
+to `ghcr.io/silo-server/silo-server:build-1874`, or to an earlier `build-N` tag
+of that image.
 
 The AIO defaults in this template describe a fresh installation. Changing an
 existing container to them does **not** migrate the separate PostgreSQL
