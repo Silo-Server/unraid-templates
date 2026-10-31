@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Container version="2">
   <Name>Silo</Name>
-  <Repository>ghcr.io/silo-server/silo-server:aio</Repository>
+  <Repository>ghcr.io/silo-server/silo-server:latest</Repository>
   <Registry>https://github.com/Silo-Server/silo-server/pkgs/container/silo-server</Registry>
   <Network>bridge</Network>
   <Shell>bash</Shell>
@@ -17,7 +17,7 @@ A full-featured web client and admin interface ship with the server. An optional
 
 The AIO image includes PostgreSQL 18 with pgvector and Redis, so a new installation needs only this container and a SECRET_KEY. Meilisearch is off by default. Advanced View lets you disable bundled Redis or enable Meilisearch, and set DATABASE_URL or REDIS_URL to use external services. PostgreSQL is disabled when DATABASE_URL is set. Meilisearch needs Redis and starts the bundled Redis when no external REDIS_URL is set, even if ENABLE_REDIS is false.
 
-Persistent state, including the bundled database, lives in /config. The default host path is /mnt/user/appdata/silo-aio. This is a fresh-install layout: changing an existing installation's image tag does not migrate its separate database. Keep the old containers, data, and SECRET_KEY until a data migration has been completed and verified. See the README before updating an existing installation.
+Persistent state, including the bundled database, lives in /config. The default host path is /mnt/user/appdata/silo-aio. This is a fresh-install layout. An installation from the earlier template keeps its external database and appdata when it updates, but Silo then runs as PUID 911 unless set: add PUID 99 and PGID 100, or IDs that can read your media, before updating. Moving to the bundled database needs a data migration. See the README before updating an existing installation.
 
 Hardware transcoding is optional. For Intel or AMD, add --device=/dev/dri:/dev/dri to Advanced View's Extra Parameters, alongside the existing parameters, only when /dev/dri exists on the host. For NVIDIA, install the Unraid Nvidia-Driver plugin, add --runtime=nvidia to Advanced View's Extra Parameters alongside the existing parameters, and enter your GPU UUID in the NVIDIA GPU UUID field. Silo's automatic hardware detection will select NVENC.</Overview>
 
@@ -32,11 +32,14 @@ Hardware transcoding is optional. For Intel or AMD, add --device=/dev/dri:/dev/d
   <Category>MediaServer:Video MediaApp:Video</Category>
   <ExtraSearchTerms>silo media server streaming films movies tv series shows jellyfin emby plex transcode</ExtraSearchTerms>
 
-  <Requires>A SECRET_KEY is required: generate one with openssl rand -base64 48. PostgreSQL and Redis are bundled; no separate service containers are required for the default installation. Existing installations need a data migration before switching to the bundled database; see the README.</Requires>
+  <Requires>A SECRET_KEY is required: generate one with openssl rand -base64 48. PostgreSQL and Redis are bundled; no separate service containers are required for the default installation. Existing installations should add PUID and PGID before updating, and need a data migration before switching to the bundled database; see the README.</Requires>
 
   <MinVer>6.12</MinVer>
   <License>AGPL-3.0-or-later</License>
   <Changes>
+### 2026.10.31
+- Follow the latest tag, which now carries the AIO image; the aio tag no longer updates.
+
 ### 2026.10.29
 - Use the AIO image with bundled PostgreSQL and Redis; leave Meilisearch off by default.
 - Store persistent state under /config, with a separate fresh-install appdata path.
