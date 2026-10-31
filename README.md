@@ -8,7 +8,7 @@ films and series.
 
 | Template | Image | Purpose |
 | --- | --- | --- |
-| `templates/silo.xml` | `ghcr.io/silo-server/silo-server:aio` | Silo with bundled PostgreSQL and Redis, and optional Meilisearch |
+| `templates/silo.xml` | `ghcr.io/silo-server/silo-server:latest` | Silo with bundled PostgreSQL and Redis, and optional Meilisearch |
 | `templates/silo-postgres.xml` | `pgvector/pgvector:pg18` | Optional external PostgreSQL for installations that manage the database separately |
 
 The Silo AIO image runs the server and its bundled services in one container.
@@ -116,17 +116,33 @@ to `/tmp/silo-download-artifacts` to keep using this mount.
 
 ## Existing installations
 
-This template's defaults describe a fresh AIO installation. Changing the image
-from `:latest` to `:aio` does **not** migrate an existing separate PostgreSQL
-database or move the old `/var/lib/silo` appdata into `/config`. Unraid also
-retains saved container settings, so an existing container can still have its
-old image, mappings, and connection URLs after the published template changes.
+Since Silo build 1875, `:latest` is the AIO image, and `:aio` no longer
+updates. A container installed from the earlier template already follows
+`:latest`, so its next update switches it to the AIO image. Unraid keeps the
+container's saved settings, so it keeps its old mappings and connection URLs.
+
+With `DATABASE_URL` and `REDIS_URL` still set, the bundled PostgreSQL and Redis
+stay off and Silo keeps using the external services. The old appdata mapping
+at `/var/lib/silo` keeps working: the image links that path to `/config/silo`.
+Without `PUID` and `PGID`, though, Silo runs as uid 911 instead of root, and on
+first start it changes the owner of its appdata and transcode directories to
+that account. Media that only root can read becomes unreadable.
+
+Before updating an existing container, open its settings and add two
+variables: `PUID` set to `99` and `PGID` set to `100`, or a user and group that
+can read your media. To stay on the earlier image instead, set the repository
+to `build-1874` or an earlier `build-N` tag.
+
+The AIO defaults in this template describe a fresh installation. Changing an
+existing container to them does **not** migrate the separate PostgreSQL
+database or move the old `/var/lib/silo` appdata into `/config`. Clearing
+`DATABASE_URL` starts an empty bundled database; it does not import the
+external one.
 
 Back up the database, application data, saved template, and `SECRET_KEY` before
 planning a migration. Keep the old service containers and data until the
-migration has been completed and verified. Clearing `DATABASE_URL` starts a
-bundled database; it does not import the external one. The separate
-`Silo-PostgreSQL` template remains available for installations that need it.
+migration has been completed and verified. The separate `Silo-PostgreSQL`
+template remains available for installations that need it.
 
 The test behind these defaults covered a **fresh install**, not migration:
 Unraid 7.4.0-rc.1, Silo build 1811, bundled PostgreSQL and Redis, setup and
