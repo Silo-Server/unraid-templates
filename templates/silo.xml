@@ -6,7 +6,7 @@
   <Network>bridge</Network>
   <Shell>bash</Shell>
   <Privileged>false</Privileged>
-  <ExtraParams>--restart=on-failure --stop-timeout=120 --memory=4g</ExtraParams>
+  <ExtraParams>--restart=on-failure --stop-timeout=120</ExtraParams>
 
   <Icon>https://raw.githubusercontent.com/Silo-Server/unraid-templates/main/icons/silo.png</Icon>
   <WebUI>http://[IP]:[PORT:8080]</WebUI>
@@ -37,6 +37,9 @@ Hardware transcoding is optional. For Intel or AMD, add --device=/dev/dri:/dev/d
   <MinVer>6.12</MinVer>
   <License>AGPL-3.0-or-later</License>
   <Changes>
+### 2026.11.23
+- Remove the default 4 GiB memory limit; add --memory to Extra Parameters to set your own.
+
 ### 2026.10.31
 - Follow the latest tag, which now carries the AIO image; the aio tag no longer updates.
 
