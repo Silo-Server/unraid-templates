@@ -30,13 +30,22 @@ Audiobookshelf-compatible listeners use `8096` and `13378`; publishing those
 ports does not enable the features in Silo. Change a host port if another
 container already uses it.
 
-The template sets `--restart=on-failure --stop-timeout=120 --memory=4g` in
-**Extra Parameters**. These restart a failed container, allow two minutes for
-Silo and PostgreSQL to shut down, and limit container memory to 4 GiB. Adjust
-the memory limit for your workload. Preserve the restart and shutdown options
-when adding GPU parameters. Unraid autostart is a separate setting; enable it
-if Silo should start with the array. No companion-container startup order is
-needed for the default AIO installation.
+The template sets `--restart=on-failure --stop-timeout=120` in
+**Extra Parameters**. These restart a failed container and allow two minutes
+for Silo and PostgreSQL to shut down. Keep both options when adding GPU or
+memory parameters. Unraid autostart is a separate setting; enable it if Silo
+should start with the array. No companion-container startup order is needed
+for the default AIO installation.
+
+The template sets no memory limit. Bundled PostgreSQL sizes its settings for
+a budget of half the host memory, read from the mounted `/proc/meminfo`. To cap
+the container, add `--memory=` with a size, such as `--memory=8g`, to
+**Extra Parameters**. PostgreSQL then budgets half of that limit instead, and
+the cap also covers Silo, Redis, Meilisearch, and transcoding. If the container
+reaches the limit, the kernel can kill a process inside it, such as a transcode
+or a database worker. Streams can then fail, and Silo or the whole container
+can restart. Leave room for concurrent transcodes. Saved installations keep
+their existing **Extra Parameters** when the template updates.
 
 ### Bundled and external services
 
@@ -171,8 +180,8 @@ Hardware acceleration is optional. CPU-only hosts need no GPU parameters.
 
 For Intel or AMD, if `/dev/dri` exists on the host, add
 `--device=/dev/dri:/dev/dri` to **Extra Parameters**, keeping the existing
-restart, shutdown, and memory options. Do not add an empty Device entry:
-DockerMan renders it as the invalid argument `--device=''`. Silo detects the
+restart and shutdown options and any memory limit you added. Do not add an
+empty Device entry: DockerMan renders it as the invalid argument `--device=''`. Silo detects the
 passed-through device; hardware VA-API transcoding was verified in the fresh
 AIO test described above.
 
