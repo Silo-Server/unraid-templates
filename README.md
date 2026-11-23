@@ -42,9 +42,10 @@ a budget of half the host memory, read from the mounted `/proc/meminfo`. To cap
 the container, add `--memory=` with a size, such as `--memory=8g`, to
 **Extra Parameters**. PostgreSQL then budgets half of that limit instead, and
 the cap also covers Silo, Redis, Meilisearch, and transcoding. If the container
-reaches the limit, the kernel stops it and Docker restarts it, so leave room
-for concurrent transcodes. Saved installations keep their existing
-**Extra Parameters** when the template updates.
+reaches the limit, the kernel can kill a process inside it, such as a transcode
+or a database worker. Streams can then fail, and Silo or the whole container
+can restart. Leave room for concurrent transcodes. Saved installations keep
+their existing **Extra Parameters** when the template updates.
 
 ### Bundled and external services
 
